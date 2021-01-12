@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 
 // import all the components we are going to use
 import {
@@ -7,21 +7,21 @@ import {
   FlatList,
   Image,
   TouchableWithoutFeedback,
-} from 'react-native';
+} from "react-native";
 
-import boardInitialData from '../data/board-init';
-import _Button from '../components/button';
-import HorizantalLable from '../components/horizantal_lable';
-import VarticalLable from '../components/vartical_lable';
-import Lable from '../components/lable';
-import {randomMove} from '../utils/Constants';
-import {randomNumberGenerator} from '../utils/utility';
+import boardInitialData from "../data/board-init";
+import _Button from "../components/button";
+import HorizantalLable from "../components/horizantal_lable";
+import VarticalLable from "../components/vartical_lable";
+import Lable from "../components/lable";
+import { randomMove } from "../utils/Constants";
+import { randomNumberGenerator } from "../utils/utility";
 
 const Chessboard = () => {
   let num;
   const [dataSource, setDataSource] = useState([]);
-  const [selectedSrcBlock, setSelectedSrcBlock] = useState({id: -1});
-  const [randomSrcBlock, setRandomSrcBlock] = useState({id: -1});
+  const [selectedSrcBlock, setSelectedSrcBlock] = useState({ id: -1 });
+  const [randomSrcBlock, setRandomSrcBlock] = useState({ id: -1 });
   const [isRandomClick, setIsRandomClick] = useState(false);
   const [playerTurn, setPlayerTurn] = useState(1);
   const [reset, setReset] = useState(0);
@@ -29,21 +29,21 @@ const Chessboard = () => {
   const [isInitialized, setIsInitialized] = useState([false, false]);
 
   useEffect(() => {
-    console.log('useEffect called');
+    console.log("useEffect called");
     console.log(boardInitialData);
     setDataSource(boardInitialData);
   }, [reset]);
 
   useEffect(() => {
-    console.log('random source block useEffect called');
-    console.log('randomSrcBlock >>> ', randomSrcBlock);
-    console.log('randomPos >>> ', randomPos);
+    console.log("random source block useEffect called");
+    console.log("randomSrcBlock >>> ", randomSrcBlock);
+    console.log("randomPos >>> ", randomPos);
     if (randomSrcBlock.id != -1) {
       let item = dataSource[randomMove[randomPos].dest];
-      console.log(' handleRandomClick dest item', item);
+      console.log(" handleRandomClick dest item", item);
       if (!item.isOccupied) {
-        console.log('Dest Item :', item);
-        console.log('validateMove');
+        console.log("Dest Item :", item);
+        console.log("validateMove");
         validateMove(item);
       }
     }
@@ -51,13 +51,13 @@ const Chessboard = () => {
 
   function onBlockSelected(item) {
     setIsRandomClick(false);
-    console.log('setRandomClick', isRandomClick);
+    console.log("setRandomClick", isRandomClick);
     if (selectedSrcBlock.id != -1 && !item.isOccupied) {
-      console.log('Dest Item :', item);
-      console.log('validateMove');
+      console.log("Dest Item :", item);
+      console.log("validateMove");
       validateMove(item);
     } else {
-      console.log('item:', item);
+      console.log("item:", item);
       setSelectedSrcBlock((prevItem) => {
         let x = {
           ...prevItem,
@@ -71,26 +71,26 @@ const Chessboard = () => {
         return x;
       });
       console.log(
-        'Selected setSelectedSrcBlock ---->   :',
-        setSelectedSrcBlock,
+        "Selected setSelectedSrcBlock ---->   :",
+        setSelectedSrcBlock
       );
     }
   }
 
   function movePiece(src, dest, player, type, isDestEnemyOccupied) {
     console.log(
-      'src, dest, player,type, isDestEnemyOccupied',
+      "src, dest, player,type, isDestEnemyOccupied",
       src,
       dest,
       player,
       type,
-      isDestEnemyOccupied,
+      isDestEnemyOccupied
     );
-    console.log('playerTurn != player', playerTurn, player);
+    console.log("playerTurn != player", playerTurn, player);
     console.log(isInitialized);
     if (playerTurn == player) {
       if (player === 1) {
-        if (type === 'knight') {
+        if (type === "knight") {
           if (
             src - 17 === dest ||
             src - 10 === dest ||
@@ -112,8 +112,8 @@ const Chessboard = () => {
             return true;
           }
         } else {
-          console.log('dest === src - 16', dest === src - 16);
-          console.log('dest === src - 8', dest === src - 8);
+          console.log("dest === src - 16", dest === src - 16);
+          console.log("dest === src - 8", dest === src - 8);
           if (
             (dest === src - 8 && !isDestEnemyOccupied) ||
             (dest === src - 16 && !isDestEnemyOccupied && !isInitialized[0])
@@ -137,7 +137,7 @@ const Chessboard = () => {
         //   return true;
         // }
       } else if (player === 2) {
-        if (type === 'knight') {
+        if (type === "knight") {
           if (
             src - 17 === dest ||
             src - 10 === dest ||
@@ -196,49 +196,51 @@ const Chessboard = () => {
     newArr[destBlock.id].isOccupied = true;
     newArr[destBlock.id].player = srcObj.player;
     newArr[destBlock.id].src = srcObj.src;
-    newArr[srcObj.id].type = '';
+    newArr[srcObj.id].type = "";
     newArr[srcObj.id].isOccupied = false;
     newArr[srcObj.id].player = -1;
-    newArr[srcObj.id].src = '';
-    console.log('new Block >>> ', newArr[srcObj.id]);
-    console.log('destBlock', newArr[destBlock.id]);
+    newArr[srcObj.id].src = "";
+    console.log("new Block >>> ", newArr[srcObj.id]);
+    console.log("destBlock", newArr[destBlock.id]);
     setIsRandomClick(false);
     setRandomPos(0);
-    console.log('setRandomClick', isRandomClick);
+    console.log("setRandomClick", isRandomClick);
   }
 
   function validateMove(destBlock) {
-    const dataObj = isRandomClick ? {...randomSrcBlock} : {...selectedSrcBlock};
+    const dataObj = isRandomClick
+      ? { ...randomSrcBlock }
+      : { ...selectedSrcBlock };
     switch (dataObj.type) {
-      case 'pawn':
-        console.log('!destBlock.isOccupied', !destBlock.isOccupied);
+      case "pawn":
+        console.log("!destBlock.isOccupied", !destBlock.isOccupied);
         if (!destBlock.isOccupied) {
           let isPossible = movePiece(
             dataObj.id,
             destBlock.id,
             dataObj.player,
             dataObj.type,
-            false,
+            false
           );
           if (isPossible) {
             setNewObjectDate(destBlock, dataObj);
 
             // setDataSource(newArr);
           } else {
-            console.log('isPossible', isPossible);
+            console.log("isPossible", isPossible);
           }
         }
 
-        setSelectedSrcBlock({id: -1});
+        setSelectedSrcBlock({ id: -1 });
         return;
-      case 'knight':
+      case "knight":
         if (!destBlock.isOccupied) {
           let isPossible = movePiece(
             dataObj.id,
             destBlock.id,
             dataObj.player,
             dataObj.type,
-            false,
+            false
           );
           if (isPossible) {
             setNewObjectDate(destBlock, dataObj);
@@ -246,7 +248,7 @@ const Chessboard = () => {
           }
         }
 
-        setSelectedSrcBlock({id: -1});
+        setSelectedSrcBlock({ id: -1 });
         return;
       //   return isMovePosible();
       // case 'king':
@@ -264,7 +266,7 @@ const Chessboard = () => {
 
   handleRandomClick = () => {
     setIsRandomClick(true);
-    console.log('setRandomClick', isRandomClick);
+    console.log("setRandomClick", isRandomClick);
     num = randomNumberGenerator(0, 4);
     setRandomPos(num);
     setRandomSrcBlock(dataSource[randomMove[num].src]);
@@ -272,40 +274,46 @@ const Chessboard = () => {
 
   handleResetClick = () => {
     setDataSource([]);
-    setSelectedSrcBlock({id: -1});
+    setSelectedSrcBlock({ id: -1 });
     setPlayerTurn(1);
     setIsInitialized([false, false]);
     setReset((count) => count + 1);
-    console.log('handleResetClick');
+    console.log("handleResetClick");
   };
 
   return (
-    <View style={{flexDirection: 'column', backgroundColor: 'black'}}>
+    <View style={{ flexDirection: "column", backgroundColor: "black" }}>
       <Lable
-        lable={
-          playerTurn == 1 ? 'PLAYER 1 ( Black )' : 'PLAYER 2 ( White )'
-        }></Lable>
+        lable={playerTurn == 1 ? "PLAYER 1 ( Black )" : "PLAYER 2 ( White )"}
+      ></Lable>
       <HorizantalLable></HorizantalLable>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: "row" }}>
         <VarticalLable></VarticalLable>
-        <View style={{flex: 1, backgroundColor: 'white', padding: 3}}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "green",
+            padding: 3,
+          }}
+        >
           <FlatList
             data={dataSource}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <TouchableWithoutFeedback onPress={() => onBlockSelected(item)}>
                 <View
                   style={{
                     flex: 1,
-                    flexDirection: 'column',
+                    flexDirection: "column",
                     margin: 1,
                     width: 40,
                     height: 40,
                     backgroundColor: item.color,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderColor: 'balck',
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderColor: "balck",
                     borderWidth: 1,
-                  }}>
+                  }}
+                >
                   <Image style={styles.imageThumbnail} source={item.src} />
                 </View>
               </TouchableWithoutFeedback>
@@ -322,8 +330,8 @@ const Chessboard = () => {
       <HorizantalLable></HorizantalLable>
 
       <View style={styles.btn_container}>
-        <_Button onPress={handleRandomClick} title={'Random'}></_Button>
-        <_Button onPress={handleResetClick} title={'Reset'}></_Button>
+        <_Button onPress={handleRandomClick} title={"Random"}></_Button>
+        <_Button onPress={handleResetClick} title={"Reset"}></_Button>
       </View>
     </View>
   );
@@ -335,15 +343,15 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     height: 50,
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    justifyContent: "space-between",
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'white',
+    justifyContent: "center",
+    backgroundColor: "white",
   },
   imageThumbnail: {
     height: 25,
